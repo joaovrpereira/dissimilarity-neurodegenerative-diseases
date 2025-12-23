@@ -1,0 +1,35 @@
+// Transfer Learning
+digraph {
+	dpi=300 rankdir=LR
+	node [fontname=Helvetica shape=box style="rounded,filled"]
+	subgraph cluster_frozen {
+		color=gray label="CONHECIMENTO TRANSFERIDO (Congelado)" style=dashed
+		fontcolor=gray
+		Input [label="Input Image
+(MRI 3D)" fillcolor="#E3F2FD"]
+		L1 [label="Conv Layers
+(Baixo Nível:
+Bordas/Texturas)" fillcolor="#FFF9C4"]
+		L2 [label="Dense Blocks
+(Médio Nível:
+Formas Anatômicas)" fillcolor="#FFF9C4"]
+		L3 [label="Transition Layers
+(Alto Nível:
+Padrões Semânticos)" fillcolor="#FFF9C4"]
+		Input -> L1
+		L1 -> L2
+		L2 -> L3
+	}
+	Features [label="Vetor de Características
+(Embeddings 1024d)" fillcolor="#C8E6C9" shape=parallelogram]
+	subgraph cluster_trainable {
+		color=black label="NOVOS CLASSIFICADORES (Treináveis)" style=solid
+		Ens [label="Ensemble Learning
+(SVM + RF + LR)" fillcolor="#FFCCBC"]
+		Out [label="Diagnóstico Final
+(Alzheimer/Controle)" fillcolor="#E1BEE7" shape=doubleoctagon]
+		Ens -> Out
+	}
+	L3 -> Features [label=" Extração"]
+	Features -> Ens [label=" Input"]
+}

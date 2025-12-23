@@ -1,0 +1,39 @@
+// Fluxo do Projeto
+digraph {
+	rankdir=TB
+	dpi=300
+	A [label="OASIS-3 Dataset
+(MRI + Clínico)" fillcolor="#E0E0E0" shape=cylinder style=filled]
+	B [label="Engenharia de Dados
+(Pareamento Temporal + Snapshot Único)" fillcolor="#B3E5FC" shape=box style="filled,rounded"]
+	C [label="Pré-processamento 3D (MONAI)
+(Reamostragem 1mm, Crop 96x96x96)" fillcolor="#B3E5FC" shape=box style=filled]
+	D [label="Feature Extraction
+(DenseNet121 3D - Pré-treinada)" fillcolor="#FFCC80" shape=component style=filled]
+	E [label="Vetor de Características
+(Deep Features - 1024d)" fillcolor="#FFF9C4" shape=parallelogram style=filled]
+	F [label="Ensemble Learning
+(Votação Suave)" fillcolor="#C8E6C9" shape=box3d style=filled]
+	{
+		rank=same
+		M1 [label=SVM fillcolor=white shape=ellipse style=filled]
+		M2 [label="Random Forest" fillcolor=white shape=ellipse style=filled]
+		M3 [label="Log. Regression" fillcolor=white shape=ellipse style=filled]
+	}
+	G [label="Threshold Moving
+(Limiar Otimizado = 0.20)" fillcolor="#F8BBD0" shape=diamond style=filled]
+	H [label="Diagnóstico Final
+(Alzheimer vs Controle)" fillcolor="#E1BEE7" shape=doubleoctagon style=filled]
+	A -> B
+	B -> C
+	C -> D
+	D -> E
+	E -> M1
+	E -> M2
+	E -> M3
+	M1 -> F
+	M2 -> F
+	M3 -> F
+	F -> G [label=" Probabilidade Média"]
+	G -> H [label=" Decisão Final"]
+}
